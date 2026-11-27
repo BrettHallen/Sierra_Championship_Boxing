@@ -109,6 +109,9 @@ Esc leaves the current screen.
 * The ring-girl intro the first time you choose Fight (when Options item 5,
   the intro, is on): the credits, the girl walking the ring with her sign and
   the intro tune, all read from your files. Any key skips it.
+* The window and Dock icon is the intro frame (the girl with the SIERRA
+  BOXING sign), drawn at startup from your own `GIRL.SPT`; nothing of the
+  original is stored in the remake.
 * Title, Gym (roster and each boxer's statistics, read-only), Options,
   boxer selection, the Tale of the Tape with the original's odds and edits,
   the Arcade corner prompt, the introductions (touching gloves in round 1,

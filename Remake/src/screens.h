@@ -70,6 +70,8 @@ typedef struct {
 void app_init(App *app, const char *game_dir);
 void app_free(App *app);
 void app_key(App *app, int key);
+/* Draw the frame used for the window icon (the ring-girl intro). */
+int  app_icon_scene(App *app);
 /* Arcade controls: key down/up events, mapped by the caller. */
 void app_action_key(App *app, int who, int action, int down);
 /* Advance by one tick (10 per second) and redraw fb + text. */

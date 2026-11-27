@@ -257,6 +257,22 @@ static void draw_girl(App *app)
     txt_at(app, 1, 24, WHITE, "(c) Copyright 1984 Sierra On-Line,Inc.");
 }
 
+/* The application icon: the intro at the end of the girl's walk to the
+ * right, sign held up (Brett's choice), drawn from the player's own files.
+ * Leaves the picture in fb and the text grid; returns 0 if GIRL.SPT is
+ * missing. The intro loads the sprites again when it plays. */
+int app_icon_scene(App *app)
+{
+    if (!app->anim.ok || !anim_load_girl(&app->anim, app->game_dir)) return 0;
+    app->girl_pos = 0x0C67;
+    const unsigned pc[4][2] = {{0x197C, (unsigned)-0x3C8}, {0x1BC4, (unsigned)-0x325}, {0, 0}, {0x1EC, 0x410}};
+    girl_draw(app, pc, 4);
+    txt_clear(app);
+    app->palette = app->assets.options.colours == 2 ? 0 : 1;
+    draw_girl(app);
+    return 1;
+}
+
 static int typed_number(App *app, int key, int *out)
 {
     size_t n = strlen(app->input);

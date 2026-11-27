@@ -106,6 +106,29 @@ static int save_shot(Video *v, const char *dir, const char *name)
     return ok;
 }
 
+/* The window and Dock icon: the ring-girl intro frame from the player's own
+ * GIRL.SPT, shown 4:3 like the screen and centred on a square. Nothing of
+ * the original is stored in the remake. Returns the icon (for --shots). */
+static SDL_Surface *set_icon(App *app, Video *v)
+{
+    if (!app_icon_scene(app)) return NULL;
+    render(app, v);
+    SDL_SetRenderTarget(v->renderer, v->target);
+    SDL_Surface *frame = SDL_RenderReadPixels(v->renderer, NULL);
+    SDL_SetRenderTarget(v->renderer, NULL);
+    txt_clear(app);
+    if (!frame) return NULL;
+    SDL_Surface *icon = SDL_CreateSurface(256, 256, SDL_PIXELFORMAT_ARGB8888);
+    if (icon) {
+        SDL_FillSurfaceRect(icon, NULL, 0);   /* transparent above and below */
+        SDL_Rect r = {0, 32, 256, 192};
+        SDL_BlitSurfaceScaled(frame, NULL, icon, &r, SDL_SCALEMODE_LINEAR);
+        SDL_SetWindowIcon(v->window, icon);
+    }
+    SDL_DestroySurface(frame);
+    return icon;
+}
+
 /* Headless check: load everything and run a computer-vs-computer fight. */
 static int selftest(const char *dir)
 {
@@ -215,6 +238,13 @@ int main(int argc, char **argv)
 
     App *app = SDL_calloc(1, sizeof *app);
     app_init(app, dir);
+    SDL_Surface *icon = set_icon(app, &v);
+    if (icon && shots) {
+        char path[1200];
+        snprintf(path, sizeof path, "%s/00_icon.bmp", shots);
+        SDL_SaveBMP(icon, path);
+    }
+    SDL_DestroySurface(icon);
     if (!shots && !audio_init()) fprintf(stderr, "no sound: %s\n", SDL_GetError());
     if (shots) {
         /* Walk through the screens with scripted keys and save each one. */
